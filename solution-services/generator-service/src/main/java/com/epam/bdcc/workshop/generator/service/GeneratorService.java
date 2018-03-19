@@ -2,6 +2,7 @@ package com.epam.bdcc.workshop.generator.service;
 
 import com.epam.bdcc.workshop.common.kafka.KafkaClientFactory;
 import com.epam.bdcc.workshop.common.kafka.KafkaSender;
+import com.epam.bdcc.workshop.common.model.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class GeneratorService {
 
+    @Value("${service.name}") private String serviceName;
     @Value("${kafka.resource.utilization.info.topic}") private String resourceUtilizationInfoTopic;
     @Autowired KafkaClientFactory kafkaClientFactory;
     private KafkaSender kafkaSender;
@@ -31,10 +33,10 @@ public class GeneratorService {
         kafkaSender.send(resourceUtilizationInfoTopic, payload);
     }
 
-    private static String formPayload(String userId, String workflowId) {
-        int putPayloadSizeInKb = ThreadLocalRandom.current().nextInt(100, 1024);
-        int returnPayloadSizeInKb = ThreadLocalRandom.current().nextInt(0, 3072);
-        return Instant.now().toString() + " | " + userId + " | " + workflowId + " | putSize: " + putPayloadSizeInKb + "; returnSize: " + returnPayloadSizeInKb;
+    private  String formPayload(String userId, String workflowId) {
+        Pair<Long, Long> timeBounds = new Pair<>(Instant.now().toEpochMilli(), Instant.now().toEpochMilli() + ThreadLocalRandom.current().nextLong(1000, 10000));
+        double avgCpuTime = ThreadLocalRandom.current().nextDouble(0, 1);
+        return "[" + serviceName + "] " + timeBounds + " | " + userId + " | " + workflowId + " | avg cpu time: " + avgCpuTime;
     }
 
     @PreDestroy

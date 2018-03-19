@@ -17,6 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class DatabaseService {
 
+    @Value("${service.name}") private String serviceName;
     @Value("${kafka.resource.utilization.info.topic}") private String resourceUtilizationInfoTopic;
     @Autowired KafkaClientFactory kafkaClientFactory;
     private KafkaSender kafkaSender;
@@ -31,10 +32,15 @@ public class DatabaseService {
         kafkaSender.send(resourceUtilizationInfoTopic, payload);
     }
 
-    private static String formPayload(String userId, String workflowId) {
+    private String formPayload(String userId, String workflowId) {
         int putPayloadSizeInKb = ThreadLocalRandom.current().nextInt(100, 1024);
         int returnPayloadSizeInKb = ThreadLocalRandom.current().nextInt(0, 3072);
-        return Instant.now().toString() + " | " + userId + " | " + workflowId + " | putSize: " + putPayloadSizeInKb + "; returnSize: " + returnPayloadSizeInKb;
+        return "[" + serviceName + "] " +
+                Instant.now().toString() + " | " +
+                userId + " | " +
+                workflowId +
+                " | putSize: " + putPayloadSizeInKb +
+                "; returnSize: " + returnPayloadSizeInKb;
     }
 
     @PreDestroy

@@ -32,9 +32,8 @@ public class VerificationService {
     }
 
     private static String formPayload(String userId, String workflowId) {
-        int putPayloadSizeInKb = ThreadLocalRandom.current().nextInt(100, 1024);
-        int returnPayloadSizeInKb = ThreadLocalRandom.current().nextInt(0, 3072);
-        return Instant.now().toString() + " | " + userId + " | " + workflowId + " | putSize: " + putPayloadSizeInKb + "; returnSize: " + returnPayloadSizeInKb;
+        int numberOfRecordsVerified = ThreadLocalRandom.current().nextInt(1, 50_000);
+        return Instant.now().toString() + " | " + userId + " | " + workflowId + " | records verified: " + numberOfRecordsVerified;
     }
 
     @PreDestroy
