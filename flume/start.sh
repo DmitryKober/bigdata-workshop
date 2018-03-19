@@ -1,0 +1,1 @@
+/usr/hdp/apache-flume-1.6.0/bin/flume-ng agent --name target_agent --conf-file /user/workshop/scripts/flume/flume-kafka-resource_utilization.conf
