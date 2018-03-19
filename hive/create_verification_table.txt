@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS database_service_stats;
+CREATE EXTERNAL TABLE database_service_stats (
+    timestamp TIMESTAMP,
+    user_id STRING,
+    workflow_id STRING,
+    records_verified BIGINT)
+STORED AS ORC
+LOCATION '/user/workshop/data/analyzed/verification_service_stats

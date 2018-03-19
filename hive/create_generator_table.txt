@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS generator_service_stats;
+CREATE EXTERNAL TABLE generator_service_stats (
+    timestamp_from TIMESTAMP,
+    timestamp_till TIMESTAMP,
+    user_id STRING,
+    workflow_id STRING,
+    avg_cpu_time DOUBLE)
+STORED AS ORC
+LOCATION '/user/workshop/data/analyzed/generator_service_stats

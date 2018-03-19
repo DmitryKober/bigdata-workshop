@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS database_service_stats;
+CREATE EXTERNAL TABLE database_service_stats (
+    timestamp TIMESTAMP,
+    user_id STRING,
+    workflow_id STRING,
+    put_size BIGINT,
+    return_size BIGINT)
+STORED AS ORC
+LOCATION '/user/workshop/data/analyzed/database_service_stats
