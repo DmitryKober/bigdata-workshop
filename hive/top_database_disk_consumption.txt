@@ -1,0 +1,9 @@
+with tbl_with_summed_sizes as (
+   select db.user_id, db.workflow_id, db.put_size + db.return_size as summed_sizes, generator.avg_cpu_time  
+   from database_service_stats db inner join generator_service_stats generator on (db.workflow_id = generator.workflow_id)
+),
+ranked_tbl_with_summed_sizes as ( 
+   select dense_rank() over (order by twss.summed_sizes desc) as ranked_summed_sizes, twss.* 
+   from tbl_with_summed_sizes twss
+)
+select * from ranked_tbl_with_summed_sizes where ranked_summed_sizes = 1;
