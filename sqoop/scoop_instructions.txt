@@ -1,0 +1,14 @@
+mysql -u root -p
+create database ORGANIZATIONS;
+use ORGANIZATIONS;
+create table USERS(id varchar(10), organization varchar(50), user varchar(100));
+insert into USERS values('1', 'EPAM', 'Dmitrii');
+insert into USERS values('2', 'EPAM', 'Olga');
+insert into USERS values('3', 'T-Systems', 'Jennifer');
+insert into USERS values('4', 'T-Systems', 'Kathryn');
+insert into USERS values('5', 'T-Systems', 'Sunil');
+insert into USERS values('6', 'Luxoft', 'Maria');
+insert into USERS values('7', 'Luxoft', 'Alexander');
+exit;
+
+sqoop import --connect jdbc:mysql://localhost:3306/ORGANIZATIONS --table USERS --username root -P --target-dir /user/workshop/hive-data/organizations --hive-import --create-hive-table --hive-table users;
