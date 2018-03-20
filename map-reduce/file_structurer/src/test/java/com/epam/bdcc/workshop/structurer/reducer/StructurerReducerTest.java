@@ -1,9 +1,13 @@
 package com.epam.bdcc.workshop.structurer.reducer;
 
-import org.apache.hadoop.io.*;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,6 +18,8 @@ import static com.epam.bdcc.workshop.structurer.reducer.StructurerReducer.SEPARA
 /**
  * Created by Dmitrii_Kober on 6/9/2017.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(StructurerReducer.class)
 public class StructurerReducerTest {
 
     private ReduceDriver<Text, Text, NullWritable, Text> reduceDriver;
@@ -34,7 +40,7 @@ public class StructurerReducerTest {
         expectedHiveRow.append("546").append(SEPARATOR_FIELD);
         expectedHiveRow.append("1209").append(SEPARATOR_FIELD);
 
-        reduceDriver.withOutput(NULL_KEY, new Text(expectedHiveRow.toString()));
+        reduceDriver.withPathOutput(NULL_KEY, new Text(expectedHiveRow.toString()), "database/stats");
         reduceDriver.runTest();
     }
 
@@ -48,7 +54,7 @@ public class StructurerReducerTest {
         expectedHiveRow.append("my-process-id").append(SEPARATOR_FIELD);
         expectedHiveRow.append("0.1623209276141473").append(SEPARATOR_FIELD);
 
-        reduceDriver.withOutput(NULL_KEY, new Text(expectedHiveRow.toString()));
+        reduceDriver.withPathOutput(NULL_KEY, new Text(expectedHiveRow.toString()), "generator/stats");
         reduceDriver.runTest();
     }
 
@@ -61,7 +67,7 @@ public class StructurerReducerTest {
         expectedHiveRow.append("my-process-id").append(SEPARATOR_FIELD);
         expectedHiveRow.append("26118").append(SEPARATOR_FIELD);
 
-        reduceDriver.withOutput(NULL_KEY, new Text(expectedHiveRow.toString()));
+        reduceDriver.withPathOutput(NULL_KEY, new Text(expectedHiveRow.toString()), "verification/stats");
         reduceDriver.runTest();
     }
 }

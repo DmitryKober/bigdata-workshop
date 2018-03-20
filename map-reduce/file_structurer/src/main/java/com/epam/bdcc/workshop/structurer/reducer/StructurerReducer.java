@@ -53,7 +53,7 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
                 hiveRow.append(returnSize).append(SEPARATOR_FIELD);
 
                 rowText.set(hiveRow.toString());
-                mos.write(NullWritable.get(), rowText, "database-base-output-path");
+                mos.write(NullWritable.get(), rowText, "database/stats");
             }
 
         }
@@ -79,7 +79,7 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
                 hiveRow.append(avgCpuTime).append(SEPARATOR_FIELD);
 
                 rowText.set(hiveRow.toString());
-                mos.write( NullWritable.get(), rowText, "generator-base-output-path");
+                mos.write( NullWritable.get(), rowText, "generator/stats");
             }
         }
         else if (key.toString().contains("[" + ServiceType.VERIFICATION.value() + "]")) {
@@ -102,7 +102,7 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
                 hiveRow.append(recordsVerified).append(SEPARATOR_FIELD);
 
                 rowText.set(hiveRow.toString());
-                mos.write(NullWritable.get(), rowText, "verification-base-output-path");
+                mos.write(NullWritable.get(), rowText, "verification/stats");
             }
         }
     }
