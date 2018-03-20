@@ -1,7 +1,6 @@
 package com.epam.bdcc.workshop.structurer.driver;
 
 import com.epam.bdcc.workshop.structurer.mapper.StructurerMapper;
-import com.epam.bdcc.workshop.structurer.partitioner.ServiceTypePartitioner;
 import com.epam.bdcc.workshop.structurer.reducer.StructurerReducer;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -12,6 +11,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.LazyOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -29,8 +29,7 @@ public class StructurerDriver extends Configured implements Tool {
 
         job.setMapperClass(StructurerMapper.class);
         job.setReducerClass(StructurerReducer.class);
-        job.setPartitionerClass(ServiceTypePartitioner.class);
-        job.setNumReduceTasks(3);
+        job.setNumReduceTasks(1);
 
         job.setInputFormatClass(TextInputFormat.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
@@ -41,6 +40,7 @@ public class StructurerDriver extends Configured implements Tool {
         job.setOutputKeyClass(BytesWritable.class);
         job.setOutputValueClass(Text.class);
 
+        LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class);
 
         return job.waitForCompletion(true) ? 0 : 1;
     }

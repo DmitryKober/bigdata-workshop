@@ -1,10 +1,10 @@
 package com.epam.bdcc.workshop.structurer.reducer;
 
 import com.epam.bdcc.workshop.structurer.model.ServiceType;
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +14,18 @@ import java.util.regex.Pattern;
 
 public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(StructurerReducer.class);
+
     public static final String SEPARATOR_FIELD = new String(new char[] {1});
     public static final NullWritable NULL_KEY = NullWritable.get();
 
-    private static final Logger LOG = LoggerFactory.getLogger(StructurerReducer.class);
+    private MultipleOutputs<NullWritable, Text> mos;
+    private Text rowText = new Text();
+
+    @Override
+    public void setup(Context context) {
+        mos = new MultipleOutputs<>(context);
+    }
 
     @Override
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -43,6 +51,9 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
                 hiveRow.append(workflowId).append(SEPARATOR_FIELD);
                 hiveRow.append(putSize).append(SEPARATOR_FIELD);
                 hiveRow.append(returnSize).append(SEPARATOR_FIELD);
+
+                rowText.set(hiveRow.toString());
+                mos.write(NullWritable.get(), rowText, "database-base-output-path");
             }
 
         }
@@ -66,6 +77,9 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
                 hiveRow.append(userId).append(SEPARATOR_FIELD);
                 hiveRow.append(workflowId).append(SEPARATOR_FIELD);
                 hiveRow.append(avgCpuTime).append(SEPARATOR_FIELD);
+
+                rowText.set(hiveRow.toString());
+                mos.write( NullWritable.get(), rowText, "generator-base-output-path");
             }
         }
         else if (key.toString().contains("[" + ServiceType.VERIFICATION.value() + "]")) {
@@ -86,13 +100,15 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
                 hiveRow.append(userId).append(SEPARATOR_FIELD);
                 hiveRow.append(workflowId).append(SEPARATOR_FIELD);
                 hiveRow.append(recordsVerified).append(SEPARATOR_FIELD);
+
+                rowText.set(hiveRow.toString());
+                mos.write(NullWritable.get(), rowText, "verification-base-output-path");
             }
         }
-
-        context.write(NULL_KEY, new Text(hiveRow.toString()));
     }
 
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
+        mos.close();
     }
 }
