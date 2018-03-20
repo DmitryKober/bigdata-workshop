@@ -9,15 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Optional;
 
 public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
 
     private static final Logger LOG = LoggerFactory.getLogger(StructurerReducer.class);
 
-    public static final String SEPARATOR_FIELD = new String(new char[] {1});
-    public static final NullWritable NULL_KEY = NullWritable.get();
+
 
     private MultipleOutputs<NullWritable, Text> mos;
     private Text rowText = new Text();
@@ -28,81 +26,48 @@ public class StructurerReducer extends Reducer<Text, Text, NullWritable, Text> {
     }
 
     @Override
-    protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-        StringBuilder hiveRow = new StringBuilder();
-
+    protected void reduce(Text key, Iterable<Text> values, Context context) {
         if (key.toString().contains("[" + ServiceType.DATABASE.value() + "]")) {
             for (Text value : values) {
-                String valueStr = value.toString().trim();
-                Matcher matcher = Pattern.compile("\\[.+\\] (.+) \\| (.+) \\| (.+) \\| putSize: (.+); returnSize: (.+)").matcher(valueStr);
-                if ( ! matcher.find() ) {
-                    LOG.warn("Unexpected database-service's line met: '{}'. Skipping.", valueStr);
-                    return;
-                }
-
-                String timestamp = matcher.group(1);
-                String userId = matcher.group(2);
-                String workflowId = matcher.group(3);
-                String putSize = matcher.group(4);
-                String returnSize = matcher.group(5);
-
-                hiveRow.append(timestamp).append(SEPARATOR_FIELD);
-                hiveRow.append(userId).append(SEPARATOR_FIELD);
-                hiveRow.append(workflowId).append(SEPARATOR_FIELD);
-                hiveRow.append(putSize).append(SEPARATOR_FIELD);
-                hiveRow.append(returnSize).append(SEPARATOR_FIELD);
-
-                rowText.set(hiveRow.toString());
-                mos.write(NullWritable.get(), rowText, "database/stats");
+                Optional<String> hiveRow = DatabaseResultRecordProducer.handle(value.toString());
+                hiveRow.ifPresent(hiveRowStr -> {
+                    rowText.set(hiveRowStr);
+                    try {
+                        mos.write(NullWritable.get(), rowText, ServiceType.DATABASE.value() + "/stats");
+                    }
+                    catch (IOException | InterruptedException e) {
+                        LOG.error("An error raised in the reducer:", e);
+                    }
+                });
             }
 
         }
         else if (key.toString().contains("[" + ServiceType.GENERATOR.value() + "]")) {
             for (Text value : values) {
-                String valueStr = value.toString().trim();
-                Matcher matcher = Pattern.compile("\\[.+\\] \\((.+), (.+)\\) \\| (.+) \\| (.+) \\| avg cpu time: (.+)").matcher(valueStr);
-                if (!matcher.find()) {
-                    LOG.warn("Unexpected generator-service's line met: '{}'. Skipping.", valueStr);
-                    return;
-                }
-
-                String timestampFrom = matcher.group(1);
-                String timestampTill = matcher.group(2);
-                String userId = matcher.group(3);
-                String workflowId = matcher.group(4);
-                String avgCpuTime = matcher.group(5);
-
-                hiveRow.append(timestampFrom).append(SEPARATOR_FIELD);
-                hiveRow.append(timestampTill).append(SEPARATOR_FIELD);
-                hiveRow.append(userId).append(SEPARATOR_FIELD);
-                hiveRow.append(workflowId).append(SEPARATOR_FIELD);
-                hiveRow.append(avgCpuTime).append(SEPARATOR_FIELD);
-
-                rowText.set(hiveRow.toString());
-                mos.write( NullWritable.get(), rowText, "generator/stats");
+                Optional<String> hiveRow = GeneratorResultRecordProducer.handle(value.toString());
+                hiveRow.ifPresent(hiveRowStr -> {
+                    rowText.set(hiveRowStr);
+                    try {
+                        mos.write(NullWritable.get(), rowText, ServiceType.GENERATOR.value() + "/stats");
+                    }
+                    catch (IOException | InterruptedException e) {
+                            LOG.error("An error raised in the reducer:", e);
+                        }
+                    });
             }
         }
         else if (key.toString().contains("[" + ServiceType.VERIFICATION.value() + "]")) {
             for (Text value : values) {
-                String valueStr = value.toString().trim();
-                Matcher matcher = Pattern.compile("\\[.+\\] (.+) \\| (.+) \\| (.+) \\| records verified: (.+)").matcher(valueStr);
-                if (!matcher.find()) {
-                    LOG.warn("Unexpected verification-service's line met: '{}'. Skipping.", valueStr);
-                    return;
-                }
-
-                String timestamp = matcher.group(1);
-                String userId = matcher.group(2);
-                String workflowId = matcher.group(3);
-                String recordsVerified = matcher.group(4);
-
-                hiveRow.append(timestamp).append(SEPARATOR_FIELD);
-                hiveRow.append(userId).append(SEPARATOR_FIELD);
-                hiveRow.append(workflowId).append(SEPARATOR_FIELD);
-                hiveRow.append(recordsVerified).append(SEPARATOR_FIELD);
-
-                rowText.set(hiveRow.toString());
-                mos.write(NullWritable.get(), rowText, "verification/stats");
+                Optional<String> hiveRow = VerificationResultRecordProducer.handle(value.toString());
+                hiveRow.ifPresent(hiveRowStr -> {
+                    rowText.set(hiveRowStr);
+                    try {
+                        mos.write(NullWritable.get(), rowText, ServiceType.VERIFICATION.value()+ "/stats");
+                    }
+                    catch (IOException | InterruptedException e) {
+                        LOG.error("An error raised in the reducer:", e);
+                    }
+                });
             }
         }
     }

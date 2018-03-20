@@ -12,7 +12,7 @@ public enum ServiceType {
 
     private String value;
 
-    private ServiceType(String value) {
+    ServiceType(String value) {
         this.value = value;
     }
 

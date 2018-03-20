@@ -12,8 +12,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.epam.bdcc.workshop.structurer.reducer.StructurerReducer.NULL_KEY;
-import static com.epam.bdcc.workshop.structurer.reducer.StructurerReducer.SEPARATOR_FIELD;
+import static com.epam.bdcc.workshop.structurer.reducer.AbstractRecordProducer.NULL_KEY;
+import static com.epam.bdcc.workshop.structurer.reducer.AbstractRecordProducer.SEPARATOR_FIELD;
 
 /**
  * Created by Dmitrii_Kober on 6/9/2017.
