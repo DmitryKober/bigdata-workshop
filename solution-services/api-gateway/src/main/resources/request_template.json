@@ -1,6 +1,6 @@
 {
   "userIds": ["Dmitrii", "Jennifer", "Daniel"],
-  "numberOfRequests": 100,
+  "numberOfRequests": 1000,
   "workflows": [
     {
       "steps": [
