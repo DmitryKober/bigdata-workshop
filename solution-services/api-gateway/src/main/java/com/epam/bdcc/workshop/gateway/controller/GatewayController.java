@@ -3,6 +3,7 @@ package com.epam.bdcc.workshop.gateway.controller;
 import com.epam.bdcc.workshop.gateway.model.WorkflowContainer;
 import com.epam.bdcc.workshop.gateway.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

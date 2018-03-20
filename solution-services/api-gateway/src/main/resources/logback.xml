@@ -27,7 +27,7 @@
 
 
     <logger name="com.epam.bdcc.workshop.gateway.service" level="DEBUG" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="AUDIT" />
     </logger>
 
     <logger name="org.apache" level="error" additivity="false">

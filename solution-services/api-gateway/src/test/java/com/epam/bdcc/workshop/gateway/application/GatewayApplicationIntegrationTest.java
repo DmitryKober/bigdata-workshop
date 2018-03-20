@@ -40,8 +40,8 @@ import static org.mockito.Mockito.doAnswer;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GatewayApplicationIntegrationTest {
 
-    private static final int ZOOKEEPER_PORT = 2282;
-    private static final int KAFKA_PORT = 9092;
+    private static final int ZOOKEEPER_PORT = 2283;
+    private static final int KAFKA_PORT = 9094;
     private static final String ZOOKEEPER_ROOT_NAMESPACE = "workshop-services";
     private static final String KAFKA_USER_ACTIVITY_CONSUMER_TOPIC = "gateway.user.activity.topic";
     private static final String KAFKA_USER_ACTIVITY_CONSUMER_GROUP = "gateway-user-activity-consumer-group";

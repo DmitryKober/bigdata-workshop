@@ -48,8 +48,13 @@ public class WorkflowService {
     }
 
     public void handle(WorkflowContainer workflowContainer) {
+        System.out.println("Start handling request" + workflowContainer.getWorkflows());
+        LOG.info("Start handling request " + workflowContainer.getWorkflows());
         for (WorkflowContainer.Workflow workflow : workflowContainer.getWorkflows()) {
             int actualNumberOfRequests = ThreadLocalRandom.current().nextInt(workflowContainer.numberOfRequests) + 1;
+
+            System.out.println("actualNumberOfRequests " + actualNumberOfRequests);
+            LOG.info("actualNumberOfRequests " + actualNumberOfRequests);
 
             for (int i = 0; i < actualNumberOfRequests; i++) {
                 List<String> userIds = workflowContainer.getUserIds();

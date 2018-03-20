@@ -1,5 +1,5 @@
 {
-  "userId": "Dmitrii",
+  "userIds": ["Dmitrii", "Jennifer", "Daniel"],
   "numberOfRequests": 100,
   "workflows": [
     {
