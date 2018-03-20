@@ -6,6 +6,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -37,7 +38,7 @@ public class StructurerDriver extends Configured implements Tool {
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         job.setOutputFormatClass(TextOutputFormat.class);
 
-        job.setOutputKeyClass(BytesWritable.class);
+        job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
         LazyOutputFormat.setOutputFormatClass(job, TextOutputFormat.class);
