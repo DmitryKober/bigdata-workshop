@@ -5,14 +5,14 @@
     {
       "steps": [
         {"serviceName": "database", "invocationDelay":0},
-        {"serviceName": "verifier", "invocationDelay":0},
+        {"serviceName": "verification", "invocationDelay":0},
         {"serviceName": "generator", "invocationDelay":0}
       ]
     },
     {
       "steps": [
         {"serviceName": "database", "invocationDelay":1000},
-        {"serviceName": "verifier", "invocationDelay":1000},
+        {"serviceName": "verification", "invocationDelay":1000},
         {"serviceName": "generator", "invocationDelay":1000}
       ]
     }
