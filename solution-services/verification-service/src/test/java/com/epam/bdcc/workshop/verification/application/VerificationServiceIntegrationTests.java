@@ -77,7 +77,7 @@ public class VerificationServiceIntegrationTests {
                 request,
                 Void.class
         );
-        Thread.sleep(5000);
+        Thread.sleep(12000);
         assertEquals("Response is not successful!", HttpStatus.OK, responseEntity.getStatusCode());
         assertFalse("No resource utilization information is received!", kafkaMessagesReceived.isEmpty());
 

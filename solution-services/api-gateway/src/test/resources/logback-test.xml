@@ -50,7 +50,7 @@
         <appender-ref ref="STDERR" />
     </logger>
 
-    <logger name="org.apache" level="info" additivity="false">
+    <logger name="org.apache" level="error" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

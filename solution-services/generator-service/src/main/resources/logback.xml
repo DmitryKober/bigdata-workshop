@@ -2,6 +2,20 @@
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                [%d{yyyy-MM-dd HH:mm:ss}] [%p] %-5level %class{60} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.err</target>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
                 [%d{yyyy-MM-dd HH:mm:ss}] [%p] %-5level %class{60} - %msg%n
@@ -9,16 +23,13 @@
         </layout>
     </appender>
 
-    <logger name="com.epam.bdcc.workshop.generator.service" level="DEBUG" additivity="false">
-        <appender-ref ref="STDOUT" />
-    </logger>
-
     <logger name="org.apache" level="error" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDERR" />
     </root>
 
 </configuration>
