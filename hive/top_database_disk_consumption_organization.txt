@@ -1,0 +1,16 @@
+set hive.cli.print.header=true;
+
+with tbl_with_summed_sizes as (
+   select usrs.organization, db.user_id, db.workflow_id, db.put_size + db.return_size as user_summed_sizes, generator.avg_cpu_time  
+   from database_service_stats db inner join generator_service_stats generator on (db.workflow_id = generator.workflow_id)
+      inner join users usrs on (db.user_id = usrs.user_id)
+),
+summed_by_organizations as
+(
+   select organization, sum(user_summed_sizes) as org_summed_sizes
+   from tbl_with_summed_sizes
+   group by organization
+)
+select dense_rank() over (order by sbo.org_summed_sizes desc) as ranked_org_summed_sizes, sbo.* 
+from summed_by_organizations sbo
+
