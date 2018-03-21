@@ -1,1 +1,0 @@
-127.0.0.1 localhost sandbox.hortonworks.com sandbox-hdp.hortonworks.com sandbox-hdf.hortonworks.com
