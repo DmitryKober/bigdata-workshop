@@ -24,7 +24,7 @@
     </appender>
 
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./gateway-audit.log</file>
+        <file>./target/gateway-audit.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
@@ -50,7 +50,7 @@
         <appender-ref ref="STDERR" />
     </logger>
 
-    <logger name="org.apache" level="error" additivity="false">
+    <logger name="org.apache" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

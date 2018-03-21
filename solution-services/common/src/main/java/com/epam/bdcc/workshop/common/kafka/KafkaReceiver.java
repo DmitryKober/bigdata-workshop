@@ -42,7 +42,7 @@ public class KafkaReceiver implements Runnable {
         consumer.subscribe(Collections.singletonList(topic));
         try {
             while (true) {
-                ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
+                ConsumerRecords<String, String> records = consumer.poll(100);
                 records.forEach(callback);
             }
         }

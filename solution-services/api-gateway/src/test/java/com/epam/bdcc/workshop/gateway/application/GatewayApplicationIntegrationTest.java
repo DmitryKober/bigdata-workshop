@@ -25,10 +25,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
@@ -94,7 +97,7 @@ public class GatewayApplicationIntegrationTest {
 
     @Before
     public void setUp() {
-        // no to cause a self-invocation on
+        // not to cause a self-invocation on
         doAnswer(invocationOnMock -> null)
                 .when(restTemplate).postForEntity(AdditionalMatchers.not(ArgumentMatchers.contains(GatewayController.GATEWAY_SERVICE)), any(), any());
     }
@@ -115,7 +118,7 @@ public class GatewayApplicationIntegrationTest {
     }
 
     private void thenGatewayServiceLogsEachWorkflowStepInvocation() throws IOException {
-//        assertTrue("Audit log is empty.", Files.size(Paths.get("audit.log")) > 0);
+        assertTrue("Audit log is empty.", Files.size(Paths.get("./target/gateway-audit.log")) > 0);
     }
 
     private void whenRESTRequestSentToGatewayService() throws InterruptedException {
@@ -123,7 +126,7 @@ public class GatewayApplicationIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> request = new HttpEntity<>(GATEWAY_ReQUEST, headers);
         restTemplate.postForEntity("http://localhost:" + localServerPort + GatewayController.GATEWAY_SERVICE, request, Void.class);
-        Thread.sleep(5000);
+        Thread.sleep(12000);
     }
 
     private KafkaReceiver givenKafkaListenerStarted(List<String> kafkaMessagesReceived) {
